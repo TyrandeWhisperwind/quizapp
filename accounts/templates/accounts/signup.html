@@ -1,0 +1,12 @@
+{%extends 'base_layout.html'%}
+{% load crispy_forms_tags %}
+{%block content%}
+<h1>Signup</h1>
+
+<!--the action is a post or get request sent to the same html page and inside the view rendering that html well detect if is a post or get and decide what to do  -->
+<form class="site-form" action="{%url  'accounts:signup' %}" method="post">
+{%csrf_token%}
+{{form|crispy }}
+<input type="submit" name="" value="Signup">
+</form>
+{%endblock%}

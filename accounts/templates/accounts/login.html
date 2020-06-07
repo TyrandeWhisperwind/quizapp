@@ -1,0 +1,19 @@
+{%extends 'base_layout.html'%}
+{% load crispy_forms_tags %}
+
+{%block content%}
+<h1>Login</h1>
+
+<!--the action is a post or get request sent to the same html page and inside the view rendering that html well detect if is a post or get and decide what to do  -->
+<form class="site-form" action="{%url 'accounts:login' %}" method="post">
+{%csrf_token%}
+{{form|crispy}}
+
+<!--get the next if it exits in the request and then save it to the hidden input -->
+<!-- if it exits then send it back to the view and redirect the user to the page he was tryin to access-->
+{%if request.GET.next%}
+<input type="hidden" name="next" value="{{request.GET.next}}">
+{%endif%}
+<input type="submit" name="" value="Login">
+</form>
+{%endblock%}

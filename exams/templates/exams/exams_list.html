@@ -1,0 +1,52 @@
+{% extends 'base_layout.html' %}
+
+{% load static %}
+
+
+
+{% block css %}
+<!-- DataTables https://cdn.datatables.net/ -->
+  <link rel="stylesheet" type="text/css" href="{% static 'datatablecss/bootstrap.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'datatablecss/dataTables.bootstrap4.min.css' %}">
+  {% endblock %}
+
+
+{% block content%}
+<div class="exams">
+<h1>Exams</h1>
+<table class="table table-bordered" id="tb_exams">
+  <thead>
+    <tr>
+      <th>title</th>
+      <th>duration</th>
+      <th>percentage</th>
+    </tr>
+  </thead>
+  <body>
+    {% for item in items %}
+      <tr>
+        <!-- namespace+name of url present in the .urls of the app-->
+        <td><a href="{% url 'exams:detailurlexam' item.id %}">{{ item.title }}</a></td>
+        <td>{{ item.duration}}</td>
+		<td>{{ item.percentage }}</td>
+      </tr>
+    {% endfor %}
+  </body>
+</table>
+
+</div>
+
+{% endblock %}
+
+
+{% block js %}
+<!-- DataTables https://cdn.datatables.net/ -->
+<script type="text/javascript" src="{% static 'datatablecss/jquery-3.3.1.js' %}"></script>
+<script type="text/javascript" src="{% static 'datatablecss/jquery.dataTables.min.js' %} "></script>
+<script type="text/javascript" src="{% static 'datatablecss/dataTables.bootstrap4.min.js' %}  "></script>
+<script >
+$(document).ready( function () {
+  $('#tb_exams').DataTable();
+} );
+</script>
+{% endblock %}

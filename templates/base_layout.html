@@ -1,0 +1,65 @@
+{% load static %}
+
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="{% static 'styles.css' %}">
+        <meta charset="UTF-8">
+        <!-- pagination-->
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+        <link rel="stylesheet" href="{% static 'pagination/pagination.css' %}">
+        <!-- end pagination-->
+
+
+    {% block css %}
+    {% endblock %}
+
+  <title>Successpass</title>
+    </head>
+    <body>
+      <header class="wrapper">
+        <nav>
+          <ul>
+            {%if user.is_authenticated%}
+            <li>
+            <!--  when submitting it ll make a post request to the url we did link to the view in paths of the acc app-->
+              <form class="logout-link" action="{% url 'accounts:logout'%}" method="post">
+                <!-- when ever we make a post request alwas add this token-->
+                {%csrf_token%}
+                <button type="submit">Logout</button>
+              </form>
+            </li>
+            <hr>
+
+              <li><a href="{%url 'exams:examurl' %}">exams</a></li>
+              <li><a href="{%url 'candidates:candidateurl' %}">candidates</a></li>
+
+            {%else%}
+            <li> <a href="{%url 'accounts:login'%}">Login</a> </li>
+            <li> <a href="{%url 'accounts:signup'%}">Signup</a> </li>
+            <hr>
+            <!-- here show the exams for a candidate-->
+
+            {%endif%}
+          </ul>
+        </nav>
+
+      </header>
+        <div class="wrapper">
+            {% block content %}
+            {% endblock %}
+        </div>
+        {% block js %}
+        {% endblock %}
+    </body>
+</html>

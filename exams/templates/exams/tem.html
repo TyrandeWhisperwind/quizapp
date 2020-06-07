@@ -1,0 +1,91 @@
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $('form').delegate('.btn_add_book', 'click', function () {
+            var $this = $(this)
+            var author_ptr = $this.attr('id').split('-')[1]
+            var $total_author_books = $(':input[name=books_formset_' + author_ptr + '-TOTAL_FORMS]');
+            var author_book_form_count = parseInt($total_author_books.val())
+            $total_author_books.val(author_book_form_count + 1)
+
+            var $new_book_form = $('<fieldset class="author_book_form">' +
+                '<legend>Book</legend>' +
+                '<p>' +
+                '<label for="id_books_formset_' + author_ptr + '-' + author_book_form_count + '-name">Name:</label>' +
+                '<input id="id_books_formset_' + author_ptr + '-' + author_book_form_count + '-name" maxlength="256" name="books_formset_' + author_ptr + '-' + author_book_form_count + '-name" type="text" />' +
+                '<input id="id_books_formset_' + author_ptr + '-' + author_book_form_count + '-author" name="books_formset_' + author_ptr + '-' + author_book_form_count + '-author" type="hidden" />' +
+                '<input id="id_books_formset_' + author_ptr + '-' + author_book_form_count + '-id" name="books_formset_' + author_ptr + '-' + author_book_form_count + '-id" type="hidden" />' +
+                '</p>' +
+                '</fieldset>'
+            )
+
+            $this.parents('.author_form').find('.author_books').prepend($new_book_form)
+        })
+
+        $('form').delegate('#btn_add_author', 'click', function () {
+            var $total_authors = $(':input[name=authors_formset-TOTAL_FORMS]');
+            author_form_count = parseInt($total_authors.val())
+            $total_authors.val(author_form_count + 1)
+
+            book_form = '<fieldset class="author_book_form">' +
+                '<legend>Book</legend>' +
+                '<p>' +
+                '<label for="id_books_formset_' + author_form_count + '-0-name">Name:</label>' +
+                '<input id="id_books_formset_' + author_form_count + '-0-name" maxlength="256" name="books_formset_' + author_form_count + '-0-name" type="text" />' +
+                '<input id="id_books_formset_' + author_form_count + '-0-author" name="books_formset_' + author_form_count + '-0-author" type="hidden" />' +
+                '<input id="id_books_formset_' + author_form_count + '-0-id" name="books_formset_' + author_form_count + '-0-id" type="hidden" />' +
+                '</p>' +
+                '</fieldset>';
+
+            $new_author_form = $(
+                '<fieldset class="author_form">' +
+                '<legend>Author</legend>' +
+                '<p>' +
+                '<label for="id_authors_formset-' + author_form_count + '-name">Name:</label>' +
+                '<input id="id_authors_formset-' + author_form_count + '-name" maxlength="256" name="authors_formset-' + author_form_count + '-name" type="text" />' +
+                '<input id="id_authors_formset-' + author_form_count + '-publisher" name="authors_formset-' + author_form_count + '-publisher" type="hidden" />' +
+                '<input id="id_authors_formset-' + author_form_count + '-id" name="authors_formset-' + author_form_count + '-id" type="hidden" />' +
+                '</p>' +
+                '<p><input type="button" value="Add Book" class="btn_add_book" id="author-' + author_form_count + '"/></p>' +
+                '<div class="author_books">' +
+                '<input id="id_books_formset_' + author_form_count + '-TOTAL_FORMS" name="books_formset_' + author_form_count + '-TOTAL_FORMS" type="hidden" value="1" />' +
+                '<input id="id_books_formset_' + author_form_count + '-INITIAL_FORMS" name="books_formset_' + author_form_count + '-INITIAL_FORMS" type="hidden" value="0" />' +
+                '<input id="id_books_formset_' + author_form_count + '-MAX_NUM_FORMS" name="books_formset_' + author_form_count + '-MAX_NUM_FORMS" type="hidden" value="1000" />' +
+                book_form +
+                '</div >' +
+                '</fieldset >'
+            )
+
+            $('#authors').prepend($new_author_form)
+        })
+    })
+</script>
+<h1>Add Publisher</h1>
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <p><input type="button" id="btn_add_author" value="Add another author"/></p>
+
+    <div id="authors">
+        {{ authors_formset.management_form }}
+        {% for form in authors_formset %}
+            <fieldset class="author_form">
+                <legend>Author</legend>
+                {{ form.as_p }}
+                <p><input type="button" value="Add Book" class="btn_add_book" id="author-{{ forloop.counter0 }}"/></p>
+
+                <div class="author_books">
+                    {{ books_formset.management_form }}
+                    {% for form in books_formset %}
+                        <fieldset class="author_book_form">
+                            <legend>Book</legend>
+                            {{ form.as_p }}
+                        </fieldset>
+                    {% endfor %}
+                </div>
+            </fieldset>
+        {% endfor %}
+    </div>
+    <p><input type="submit" value="Save"></p>
+</form>

@@ -1,0 +1,55 @@
+{% extends 'base_layout.html' %}
+
+{% load bootstrap_pagination %}
+
+{%block content%}
+
+
+
+
+<div class="exam-detail" >
+  {% if messages %}
+      {% for message in messages %}
+          <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+      {% endfor %}
+  {% endif %}
+
+
+  <h2>{{exam.title}}</h2>
+  {% for question in items %}
+  <p>{{question.title}}</p>
+  <form action="{% url 'exams:detailurlexam' exam.id  %}" method="post">
+    {% csrf_token %}
+    {% for choice in question.options_of_question %}
+
+    <input type="hidden" name="question_id" value="{{question.id}}">
+
+    <input type="{{question.contentType}}" name="choice" id="choice{{forloop.counter}}" value="{{choice.id}}">
+    <label for="choice{{forloop.counter}}">{{ choice.body }}</label><br>
+    {% endfor %}
+    <input type="submit" value="Submit">
+    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+
+    </form>
+  {%endfor%}
+  <div class="pagination">
+  {% if items.paginator.num_pages > 1 %}
+      <!-- start -->
+      {% include 'pagination.html' with items=items %}
+      <!-- end -->
+  {% endif %}
+  </div>
+  </div>
+
+{%block js%}
+<script type="text/javascript">
+  window.setTimeout(function() {
+    $(".alert").fadeTo(500, 0).slideUp(500, function(){
+        $(this).remove();
+    });
+}, 2000);
+</script>
+{%endblock%}
+
+{%endblock%}

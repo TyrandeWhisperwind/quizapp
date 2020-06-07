@@ -1,0 +1,67 @@
+{% extends 'base_layout.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+  <h2 class="mb-3">{{ question.description }}</h2>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {{ formset.management_form }}
+    {{ form|crispy }}
+    <div class="card mb-3{% if formset.errors %} border-danger{% endif %}">
+      <div class="card-header">
+        <div class="row">
+          <div class="col-8">
+            <strong>Answers</strong>
+          </div>
+          <div class="col-2">
+            <strong>Correct?</strong>
+          </div>
+          <div class="col-2">
+            <strong>Delete?</strong>
+          </div>
+        </div>
+      </div>
+      <!--  write the error raised by the clean method -->
+      <!-- write error raised by min 2 options-->
+      <!-- write error raised by max 10 options-->
+      <!-- if the instance option exists in the bd and the user entred a different text for that option here we target blank option-->
+
+      {% for error in formset.non_form_errors %}
+        <div class="card-body bg-danger border-danger text-white py-2">{{ error }}</div>
+      {% endfor %}
+
+      <div class="list-group list-group-flush list-group-formset">
+        {% for form in formset %}
+          <div class="list-group-item">
+            <div class="row">
+              <div class="col-8">
+                <!--hidden fields with values that are simply returned to the server when the completed form is submitted.
+                -->
+                {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+                <!--visible fields that the user fills in, or-->
+
+                {{ form.body|as_crispy_field }}
+                {{ form.image|as_crispy_field }}
+<!-- if the instance option exists in the bd and the user entred blank text for that option rise error !!!!!!!!!!!!!!11-->
+                {% if form.instance.pk and form.body == "" %}<p class="mb-0 mt-1"><small class="text-muted font-italic"><strong>Old answer:</strong> {{ form.instance.body }}</small></p>{% endif %}
+              </div>
+              <div class="col-2">
+                {{ form.is_correct }}
+              </div>
+              <div class="col-2">
+              <!--  if the option exists in the database output delete field to delete it from database-->
+                {% if form.instance.pk %}
+                  {{ form.DELETE }}
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    <p>
+      <small class="form-text text-muted">Your question may have at least <strong>2</strong> answers and maximum <strong>10</strong> answers. Select at least one correct answer.</small>
+    </p>
+    <button type="submit" class="btn btn-success">Save changes</button>
+  </form>
+{% endblock %}

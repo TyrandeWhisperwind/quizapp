@@ -1,0 +1,43 @@
+{% extends 'base_layout.html' %}
+{% load static %}
+
+
+{% block css %}
+<!-- DataTables https://cdn.datatables.net/ -->
+    <link rel="stylesheet" type="text/css" href="{% static 'datatablecss/bootstrap.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'datatablecss/dataTables.bootstrap4.min.css' %}">
+  {% endblock %}
+
+{% block content%}
+<h1 >Candidates</h1>
+<table   class="table table-bordered" id="tb_candidates">
+  <thead>
+    <tr>
+      <th>Username</th>
+      <th>First name</th>
+      <th>Email</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in candidates %}
+      <tr>
+        <td>{{ user.firstName }}</td>
+        <td>{{ user.lastName }}</td>
+        <td>{{ user.email }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
+{% block js %}
+<!-- DataTables https://cdn.datatables.net/ -->
+<script type="text/javascript" src="{% static 'datatablecss/jquery-3.3.1.js' %}"></script>
+<script type="text/javascript" src="{% static 'datatablecss/jquery.dataTables.min.js' %} "></script>
+<script type="text/javascript" src="{% static 'datatablecss/dataTables.bootstrap4.min.js' %}  "></script>
+<script >
+$(document).ready( function () {
+  $('#tb_candidates').DataTable();
+} );
+</script>
+{% endblock %}
